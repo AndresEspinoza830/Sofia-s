@@ -9,7 +9,16 @@ const api = new WooCommerceRestApi({
 });
 
 // fetch all products from WooCommerce //
-export default async function fetchWooCommerceProducts() {
+export async function fetchWooCommerceProducts() {
+    try {
+        const response = await api.get("products/categories");
+        return response;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+export async function obtenerProductos() {
     try {
         const response = await api.get("products?per_page=100");
         return response;

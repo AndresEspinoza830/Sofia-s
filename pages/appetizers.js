@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
-import { fetchWooCommerceProducts } from "../utils/wooCommerceApi";
+import fetchWooCommerceProducts from "../utils/wooCommerceApi";
 
-const menu = ({ products }) => {
+const appetizers = ({ products }) => {
 
     console.log(products)
     products = products.filter(p => p.name !== 'Uncategorized')
@@ -12,9 +12,9 @@ const menu = ({ products }) => {
         <>
             <Navbar />
             <div className="min-h-screen m-auto max-w-[1360px] mx-auto">
-                <div className='w-full flex text-center items-center mt-14 border-2 py-5 px-1 rounded-lg'>
+                <div className='w-full flex text-center items-center mt-14 border-2 py-5 rounded-lg'>
                     {products.map(p => (
-                        <Link key={p.id} className='w-full' href={p.name.toLowerCase()}>
+                        <Link key={p.id} className='w-full ' href={p.name.toLowerCase()}>
                             <h2 className='font-philo'>{p.name}</h2>
                         </Link>
                     ))}
@@ -26,7 +26,7 @@ const menu = ({ products }) => {
     )
 }
 
-export default menu
+export default appetizers
 
 export const getStaticProps = async () => {
     const wooCommerceProducts = await fetchWooCommerceProducts().catch((error) =>
