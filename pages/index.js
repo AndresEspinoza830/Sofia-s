@@ -6,12 +6,13 @@ import img2 from '../public/food2.jpg';
 import img3 from '../public/food3.jpg';
 import res from '../public/res2.jpg'
 
-export default function Home() {
+
+export default function Home({ carrito, eliminarProducto }) {
 
   return (
     <>
 
-      <Navbar />
+      <Navbar carrito={carrito} eliminarProducto={eliminarProducto} />
       <div className=" w-full bg-[url('/banner.jpg')] h-screen flex justify-center items-center ">
         <div className='absolute text-[#F2F2F2] text-cente flex flex-col justify-center items-center'>
           <div className='flex items-end space-x-2'>

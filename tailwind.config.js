@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -13,6 +14,11 @@ module.exports = {
   },
   images: {
     domains: ['flyer250.com/restaurant']
+  },
+  variants: {
+    extend: {
+      opacity: ['group-focus']
+    },
   },
   plugins: [],
 }

@@ -4,8 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer {
+/* @layer base {
     body {
-        background-color: #f0f0f0;
+        @apply opacity-20;
     }
 } */

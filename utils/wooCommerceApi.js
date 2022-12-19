@@ -18,10 +18,19 @@ export async function fetchWooCommerceProducts() {
     }
 }
 
-export async function obtenerProductos() {
+export async function obtenerProductos(category) {
     try {
-        const response = await api.get("products?per_page=100");
-        return response;
+        const response = await api.get(`products?categories=${category}&per_page=40`)
+        return response
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+export async function obtenerProductoPagina(slug) {
+    try {
+        const response = await api.get(`products?slug=${slug}`)
+        return response
     } catch (error) {
         throw new Error(error);
     }
