@@ -1,12 +1,15 @@
 
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
+import { useRouter } from 'next/router'
 import { fetchWooCommerceProducts } from "../utils/wooCommerceApi";
 
 
 const NavMenu = ({ products, carrito, eliminarProducto }) => {
 
     products = products.filter(p => p.name !== 'Uncategorized')
+    const router = useRouter();
+    console.log(router)
 
     return (
         <>
@@ -15,12 +18,7 @@ const NavMenu = ({ products, carrito, eliminarProducto }) => {
                 <div className='w-full flex text-center items-center mt-14 border-2 py-5 px-1 rounded-lg'>
                     {products.map(p => (
                         <Link key={p.id} className='w-full' href={`/categories/${p.id}`}>
-                            <h2 className='font-philo'>
-                                {/* // transition={{ duration: 3 }}
-                        // animate={{ */}
-                                {/* //     y: 100,
-                        //     color: '#D9BF73'
-                        // }}> */}
+                            <h2 className=''>
                                 {p.name}
                                 {p}
                             </h2>

@@ -21,8 +21,8 @@ const Category = ({ productos, carrito, eliminarProducto }) => {
             <div className="container my-12 mx-auto px-4 md:px-12">
                 <div className="flex flex-wrap -mx-1 lg:-mx-4">
                     {productos.map(producto => (
-                        <div className="my-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 min-h-[420px] flex flex-col justify-between rounded-lg">
-                            <img alt="Placeholder" class="block h-auto w-full" src="/prueba.jpg"></img>
+                        <div key={producto.id} className="my-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 min-h-[420px] flex flex-col justify-between rounded-lg">
+                            <img alt="Placeholder" className="block h-auto w-full" src="/prueba.jpg"></img>
                             <div className='px-2'>
                                 <h2 className='font-philo text-[#052617] uppercase'>{producto.name}</h2>
                                 <h2 className='text-xl text-[#052617] font-bold'>${producto.price}</h2>

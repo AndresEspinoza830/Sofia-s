@@ -11,13 +11,11 @@ const Navbar = ({ carrito, eliminarProducto }) => {
         setCart(true)
     }
 
-    console.log(carrito)
-
     return (
         <div className=''>
             {cart ? (
-                <div className='fixed top-0 left-0 w-full h-screen bg-black/70 z-11'>
-                    <div className='fixed right-0 top-0 w-[75%] sm:w-[60%] md:w-[25%] bg-white h-screen shadow-m p-2 transition-all ease-in-out duration-500 '>
+                <div className='fixed top-0 left-0 w-full h-screen bg-black/70 z-90'>
+                    <div className='fixed right-0 pt-[50px] top-0 w-[75%] sm:w-[60%] md:w-[28%] bg-white h-screen shadow-m p-2 transition-all ease-in-out duration-500 '>
                         <div className='flex justify-end mb-4'>
                             <svg
                                 width={20}
@@ -65,7 +63,7 @@ const Navbar = ({ carrito, eliminarProducto }) => {
                 ('')
             }
 
-            <div className="w-full py-1 shadow-lg z-10">
+            <div className="w-full py-1 shadow-lg z-98">
                 < div className='flex justify-between items-center w-full px-10 2xl:px-20' >
                     <Image
                         src={logo}
@@ -87,7 +85,7 @@ const Navbar = ({ carrito, eliminarProducto }) => {
                     </nav>
                     <div className='flex relative h-full'>
                         <div className="w-6 h-6 bg-red-500 font-medium top-[-8px] left-5 text-white absolute rounded-full m-auto flex justify-center items-center">
-                            {carrito.length || 0}
+                            {carrito.length || '0'}
                         </div>
 
                         {/* <Link href="/carrito"> */}

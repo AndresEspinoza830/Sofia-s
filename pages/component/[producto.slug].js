@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
 import Navbar from '../../components/Navbar'
 import { obtenerProductoPagina } from '../../utils/wooCommerceApi';
+import 'react-toastify/dist/ReactToastify.css'
 
 
 const Name = ({ carrito, producto, agregarCarrito, eliminarProducto }) => {
@@ -14,6 +16,11 @@ const Name = ({ carrito, producto, agregarCarrito, eliminarProducto }) => {
         p.description = (p.description).replace(/(<([^>]+)>)/ig, ''))
     )
     const product = producto[0]
+    console.log(product.cross_sell_ids)
+    product.cross_sell_ids[0]
+    product.cross_sell_ids[1]
+    product.cross_sell_ids[2]
+    product.cross_sell_ids[3]
 
     const handleCarrito = (e) => {
         e.preventDefault();
@@ -32,7 +39,7 @@ const Name = ({ carrito, producto, agregarCarrito, eliminarProducto }) => {
         }
 
         agregarCarrito(guitarraSeleccionada);
-
+        toast.success('Agregado al pedido');
     }
 
     return (
@@ -97,6 +104,9 @@ const Name = ({ carrito, producto, agregarCarrito, eliminarProducto }) => {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                autoClose={2000}
+            />
         </>
     )
 }
@@ -118,3 +128,4 @@ export async function getServerSideProps({ query }) {
         // regenerate page with new data fetch after 60 seconds
     };
 }
+

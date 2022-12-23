@@ -1,16 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
+import { useRouter } from 'next/router'
 import { fetchWooCommerceProducts } from "../utils/wooCommerceApi";
 // import { motion } from 'framer-motion';
 
 const menu = ({ products, carrito, eliminarProducto }) => {
 
-    // console.log(products)
     products = products.filter(p => p.name !== 'Uncategorized')
-    // products = products.map(p => (
-    //     p.name = (p.name).toLowercase()
-    // ))
+
+    const router = useRouter();
+    console.log(router)
+
 
     return (
         <>
