@@ -3,24 +3,22 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import Navbar from '../../components/Navbar'
-import { obtenerProductoPagina } from '../../utils/wooCommerceApi';
+import { obtenerProductoPagina, productoCross } from '../../utils/wooCommerceApi';
 import 'react-toastify/dist/ReactToastify.css'
+import Cross from '../../components/Cross'
 
 
-const Name = ({ carrito, producto, agregarCarrito, eliminarProducto }) => {
+const Name = ({ carrito, producto, agregarCarrito, eliminarProducto, idcross }) => {
 
     const [cantidad, setCantidad] = useState(1);
-
 
     producto.map(p => (
         p.description = (p.description).replace(/(<([^>]+)>)/ig, ''))
     )
+
     const product = producto[0]
-    console.log(product.cross_sell_ids)
-    product.cross_sell_ids[0]
-    product.cross_sell_ids[1]
-    product.cross_sell_ids[2]
-    product.cross_sell_ids[3]
+    console.log(idcross)
+    // console.log(product.cross_sell_ids);
 
     const handleCarrito = (e) => {
         e.preventDefault();
@@ -103,7 +101,21 @@ const Name = ({ carrito, producto, agregarCarrito, eliminarProducto }) => {
                         </div>
                     </div>
                 </div>
+                <div className='w-full md:mx-2 mt-12'>
+                    <h3 className='font-philo font-bold text-xl mb-4'>Tambien te puede interesar</h3>
+                    <div className='flex justify-between'>
+                        {idcross.map(cross => (
+                            <Cross
+                                key={cross.id}
+                                cross={cross}
+                                agregarCarrito={agregarCarrito}
+                            />
+                        ))}
+                    </div>
+
+                </div>
             </div>
+
             <ToastContainer
                 autoClose={2000}
             />
@@ -115,17 +127,42 @@ export default Name;
 export async function getServerSideProps({ query }) {
 
     const slug = Object.values(query)[0]
-    console.log(slug)
+    // console.log(slug)
 
     const productosWoo = await obtenerProductoPagina(slug).catch((error) =>
         console.error(error)
     );
 
+    const idsCross = productosWoo.data[0].cross_sell_ids
+    console.log(idsCross)
+
+    const idcross = await productoCross(idsCross).catch((error) =>
+        console.error(error)
+    );
+
+
     return {
         props: {
-            producto: productosWoo.data
+            producto: productosWoo.data,
+            idcross: idcross.data
         },
         // regenerate page with new data fetch after 60 seconds
     };
 }
+
+
+// export async function getServerSideProps() {
+
+//     const cross = await productoCross(8884).catch((error) =>
+//         console.error(error)
+//     );
+
+//     return {
+//         props: {
+//             cross: cross.data
+//         },
+//         // regenerate page with new data fetch after 60 seconds
+//     };
+// }
+
 

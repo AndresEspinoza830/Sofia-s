@@ -12,7 +12,6 @@ const Carrito = ({ carrito, actualizarCantidad, eliminarProducto, setCarrito }) 
     useEffect(() => {
         const calculoTotal = carrito.reduce((total, producto) => total + (producto.cantidad * producto.price), 0)
         setTotal(calculoTotal);
-
     }, [carrito])
 
     console.log(carrito)
@@ -92,11 +91,12 @@ const Carrito = ({ carrito, actualizarCantidad, eliminarProducto, setCarrito }) 
                     <p className=' font-bold py-1'>Subtotal: ${total}</p>
                     <p className=' font-bold py-1'>Descuento: -0.00</p>
                     <p className='mb-4 font-bold border-y-[1px] py-4'>Total a pagar: ${total}</p>
-                    <button
+                    <Link
+                        href='/checkout'
                         className='bg-[#ed174a] hover:bg-[#fa305f] mb-2 block text-center transition duration-300 w-full rounded-md py-3 text-white'
                     >
                         Proceed to checkout
-                    </button>
+                    </Link>
                 </div>
 
             </div>
