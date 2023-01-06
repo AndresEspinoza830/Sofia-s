@@ -30,7 +30,7 @@ export async function obtenerProductos(category) {
 export async function obtenerProductoPagina(slug) {
     try {
         const response = await api.get(`products?slug=${slug}`)
-        return response
+        return response.json()
     } catch (error) {
         throw new Error(error);
     }
@@ -52,6 +52,7 @@ export async function productoCross(id) {
 //     .catch((error) => {
 //         console.log(error.response.data);
 //     });
+
 
 export async function crearOrder(data) {
     try {

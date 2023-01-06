@@ -1,31 +1,85 @@
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form';
 import Navbar from '../components/Navbar';
-import { crearOrder } from '../utils/wooCommerceApi'
-import Router from 'next/router';
 
-const checkout = ({ carrito, eliminarProducto, order }) => {
+const checkout = ({ carrito, eliminarProducto }) => {
 
     const [total, setTotal] = useState(0)
+    const [pickup, setPickup] = useState(false)
+    const [delivery, setDelivery] = useState(false)
+
+    const line_items = carrito.map(producto => ({
+        product_id: producto.id,
+        quantity: producto.cantidad
+    }))
+
+    const handlerPick = () => {
+        setPickup(true)
+    }
+
+    const handlerDelivery = () => {
+        setDelivery(true)
+    }
 
     useEffect(() => {
         const calculoTotal = carrito.reduce((total, producto) => total + (producto.cantidad * producto.price), 0)
         setTotal(calculoTotal);
     }, [carrito])
 
-    console.log()
-
     const { register, handleSubmit, formState: { errors } } = useForm();
-    // console.log(errors.nombre)
-    // console.log(order)
 
-    const router = useRouter()
-    console.log(router)
+    const onSubmit = async (data) => {
 
-    const onSubmit = (data) => {
-        console.log(router.query = data)
+        const { nombre, apellido, direccion, telefono, city, state, postcode, correo, direccionb } = data
+
+        const info = {
+            payment_method: "bacs",
+            payment_method_title: "Direct Bank Transfer",
+            set_paid: true,
+            billing: {
+                first_name: nombre,
+                last_name: apellido,
+                address_1: direccion,
+                address_2: direccion,
+                city: city,
+                state: state,
+                postcode: postcode,
+                country: "US",
+                email: correo,
+                phone: telefono
+            },
+            shipping: {
+                first_name: nombre,
+                last_name: apellido,
+                address_1: direccionb,
+                address_2: direccionb,
+                city: city,
+                state: state,
+                postcode: postcode,
+                country: "US"
+            },
+            line_items: line_items,
+            shipping_lines: [
+                {
+                    method_id: "flat_rate",
+                    method_title: "Flat Rate",
+                    total: "0"
+                }
+            ]
+        };
+
+        setTimeout(async () => {
+            const response = await fetch('api/create-order', {
+                method: 'POST',
+                body: JSON.stringify(info),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const resul = await response.json();
+            console.log(resul)
+        }, 4000);
+
     }
 
     return (
@@ -70,7 +124,7 @@ const checkout = ({ carrito, eliminarProducto, order }) => {
                             <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='telefono' placeholder='Telefono' {...register('telefono', {
                                 required: true
                             })} />
-                            {errors.correo?.type === 'pattern' && <p className='text-red-600 font-medium'>El telefono no es valido</p>}
+                            {errors.telefono?.type === 'pattern' && <p className='text-red-600 font-medium'>El telefono no es valido</p>}
                         </div>
                         <div>
                             <label htmlFor="direccion">Direccion</label>
@@ -78,34 +132,102 @@ const checkout = ({ carrito, eliminarProducto, order }) => {
                                 required: true
                             })} />
                         </div>
-                        <div className='flex justify-between'>
-                            <div>
-                                <label htmlFor="city">City</label>
-                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='city' placeholder='City' {...register('city', {
-                                    required: true
-                                })} />
-                            </div>
-                            <div>
-                                <label htmlFor="state">State</label>
-                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='state' placeholder='State' {...register('state', {
-                                    required: true
-                                })} />
-                            </div>
-                            <div>
-                                <label htmlFor="postcode">PostCode / ZIP</label>
-                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='postcode' placeholder='Code' {...register('postcode', {
-                                    required: true
-                                })} />
-                            </div>
+                        <div className='flex justify-center items-center space-x-3'>
+                            <button
+                                onClick={handlerPick}
+                                className={`${delivery ? 'disabled' : ''}bg-[#f2f2f2] px-6 py-3 rounded-md hover:scale-105 duration-200`}>
+                                Pickup
+                            </button>
+                            <p>OR</p>
+                            <button
+                                onClick={handlerDelivery}
+                                className={`${pickup ? 'disabled' : ''} bg-[#f2f2f2] px-6 py-3 rounded-md hover:scale-105 duration-200`}>
+                                Delivery
+                            </button>
                         </div>
-                        <div>
-                            <label htmlFor="informacion">Additional information</label>
-                            <textarea type="text" className='block w-full bg-[#f2f2f2] p-2' id='informacion' placeholder='Maximo 30 caracteres' {...register('mensaje', {
-                                required: false,
-                                maxLength: 30
-                            })} />
-                            {errors.mensaje?.type === 'maxLength' && <p className='text-red-600 font-medium'>Limite sobrepasado</p>}
-                        </div>
+                        {
+                            pickup ?
+                                (
+                                    <>
+                                        <div className='flex justify-between'>
+                                            <div>
+                                                <label htmlFor="city">City</label>
+                                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='city' placeholder='City' {...register('city', {
+                                                    required: true
+                                                })} />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="state">State</label>
+                                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='state' placeholder='State' {...register('state', {
+                                                    required: true
+                                                })} />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="postcode">PostCode / ZIP</label>
+                                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='postcode' placeholder='Code' {...register('postcode', {
+                                                    required: true
+                                                })} />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="informacion">Additional information</label>
+                                            <textarea type="text" className='block w-full bg-[#f2f2f2] p-2' id='informacion' placeholder='Maximo 30 caracteres' {...register('mensaje', {
+                                                required: false,
+                                                maxLength: 30
+                                            })} />
+                                            {errors.mensaje?.type === 'maxLength' && <p className='text-red-600 font-medium'>Limite sobrepasado</p>}
+                                        </div>
+                                    </>
+                                )
+                                :
+                                ('')
+                        }
+                        {
+                            delivery ?
+                                (
+                                    <>
+                                        <h2>Shipping</h2>
+                                        <div>
+                                            <label htmlFor="direccionb">Direccion</label>
+                                            <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='direccionb' placeholder='Direccion' {...register('direccionb', {
+                                                required: true
+                                            })} />
+                                        </div>
+                                        <div className='flex justify-between'>
+
+                                            <div>
+                                                <label htmlFor="city">City</label>
+                                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='city' placeholder='City' {...register('city', {
+                                                    required: true
+                                                })} />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="state">State</label>
+                                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='state' placeholder='State' {...register('state', {
+                                                    required: true
+                                                })} />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="postcode">PostCode / ZIP</label>
+                                                <input type="text" className='block w-full bg-[#f2f2f2] p-2' id='postcode' placeholder='Code' {...register('postcode', {
+                                                    required: true
+                                                })} />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="informacion">Additional information</label>
+                                            <textarea type="text" className='block w-full bg-[#f2f2f2] p-2' id='informacion' placeholder='Maximo 30 caracteres' {...register('mensaje', {
+                                                required: false,
+                                                maxLength: 30
+                                            })} />
+                                            {errors.mensaje?.type === 'maxLength' && <p className='text-red-600 font-medium'>Limite sobrepasado</p>}
+                                        </div>
+                                    </>
+                                )
+                                :
+                                ('')
+                        }
+
                         <input type="submit" className='bg-black text-white font-bold w-full p-2 cursor-pointer' value="Place Order" />
                     </form>
                 </div>
@@ -117,6 +239,9 @@ const checkout = ({ carrito, eliminarProducto, order }) => {
                         <p className=' font-bold py-1'>Descuento: -0.00</p>
                         <p className='mb-4 font-bold border-y-[1px] py-4'>Total a pagar: ${total}</p>
                     </div>
+                    <div>
+
+                    </div>
                 </div>
             </div>
         </>
@@ -124,67 +249,3 @@ const checkout = ({ carrito, eliminarProducto, order }) => {
 }
 
 export default checkout
-
-// You should use getServerSideProps when:
-// - Only if you need to pre-render a page whose data must be fetched at request time
-export async function getServerSideProps(data) {
-
-    console.log(data)
-    const info = {
-        payment_method: "bacs",
-        payment_method_title: "Direct Bank Transfer",
-        set_paid: true,
-        billing: {
-            first_name: "John",
-            last_name: "Doe",
-            address_1: "969 Market",
-            address_2: "",
-            city: "San Francisco",
-            state: "CA",
-            postcode: "94103",
-            country: "US",
-            email: "andrespinoza@gmail.com",
-            phone: "989123821"
-        },
-        shipping: {
-            first_name: "Andres",
-            last_name: "Espinoza",
-            address_1: "969 Market",
-            address_2: "",
-            city: "Lima",
-            state: "CA",
-            postcode: "94103",
-            country: "US"
-        },
-        line_items: [
-            {
-                product_id: 93,
-                quantity: 2
-            },
-            {
-                product_id: 22,
-                variation_id: 23,
-                quantity: 1
-            }
-        ],
-        shipping_lines: [
-            {
-                method_id: "flat_rate",
-                method_title: "Flat Rate",
-                total: "10.00"
-            }
-        ]
-    };
-
-    const order = await crearOrder(info).catch((error) =>
-        console.error(error)
-    );
-
-    return {
-        props: {
-            order: order.data,
-            // productos: productosWoo.data
-        },
-        // regenerate page with new data fetch after 60 seconds
-    };
-}

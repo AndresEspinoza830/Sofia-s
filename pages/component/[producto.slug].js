@@ -18,7 +18,7 @@ const Name = ({ carrito, producto, agregarCarrito, eliminarProducto, idcross }) 
 
     const product = producto[0]
     console.log(idcross)
-    // console.log(product.cross_sell_ids);
+    console.log(product.cross_sell_ids);
 
     const handleCarrito = (e) => {
         e.preventDefault();
